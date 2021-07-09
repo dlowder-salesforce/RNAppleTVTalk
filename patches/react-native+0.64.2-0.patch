@@ -1,0 +1,28 @@
+diff --git a/node_modules/react-native/Libraries/Components/Touchable/Touchable.js b/node_modules/react-native/Libraries/Components/Touchable/Touchable.js
+index 216e676..8bfa1cb 100644
+--- a/node_modules/react-native/Libraries/Components/Touchable/Touchable.js
++++ b/node_modules/react-native/Libraries/Components/Touchable/Touchable.js
+@@ -14,6 +14,7 @@ const BoundingDimensions = require('./BoundingDimensions');
+ const Platform = require('../../Utilities/Platform');
+ const Position = require('./Position');
+ const React = require('react');
++const ReactNative = require('../../Renderer/shims/ReactNative');
+ const StyleSheet = require('../../StyleSheet/StyleSheet');
+ const TVEventHandler = require('../AppleTV/TVEventHandler');
+ const UIManager = require('../../ReactNative/UIManager');
+diff --git a/node_modules/react-native/React/Views/RCTFont.mm b/node_modules/react-native/React/Views/RCTFont.mm
+index 93e1a80..34f73bd 100644
+--- a/node_modules/react-native/React/Views/RCTFont.mm
++++ b/node_modules/react-native/React/Views/RCTFont.mm
+@@ -326,7 +326,11 @@ RCT_ARRAY_CONVERTER(RCTFontVariantDescriptor)
+       isCondensed = isCondensedFont(font);
+     } else {
+       // Not a valid font or family
++#if TARGET_OS_TV
++      RCTLogInfo(@"Unrecognized font family '%@'", familyName);
++#else
+       RCTLogError(@"Unrecognized font family '%@'", familyName);
++#endif
+       if ([UIFont respondsToSelector:@selector(systemFontOfSize:weight:)]) {
+         font = [UIFont systemFontOfSize:fontSize weight:fontWeight];
+       } else if (fontWeight > UIFontWeightRegular) {
